@@ -366,18 +366,19 @@ PUBLIC :: garray, printarray, centermass, ordpar
     INTEGER :: i, j
 
     REAL , PARAMETER :: Cmass = 12.0107 , Hmass = 1.00784 , Nmass = 14.0067, Omass  = 15.999
-    REAL, ALLOCATABLE :: ring(:,:,:)
-    REAL, ALLOCATABLE :: center(:,:), vector(:,:)
+    CHARACTER(1), PARAMETER :: Cstring = 'C' , Hstring = 'H' , Nstring = 'N' , Ostring = 'O'
+    ! REAL, ALLOCATABLE :: ring(:,:,:)
+    REAL, ALLOCATABLE :: center(:,:), a(:,:), b(:,:), c(:,:)
     REAL, ALLOCATABLE :: mass(:), angle(:), ord(:)
     
     CHARACTER(2) :: string1, string2
 
-    REAL :: masstot = 0, xtot = 0, ytot = 0, ztot = 0
+    REAL :: masstot = 0.0, xtot = 0.0, ytot = 0.0, ztot = 0.0
     REAL :: xvec1, xvec2
     REAL :: yvec1, yvec2
     REAL :: zvec1, zvec2
 
-    REAL :: a1,a2,a3,b1,b2,b3,c1,c2,c3
+
 
 
     
@@ -408,16 +409,18 @@ PUBLIC :: garray, printarray, centermass, ordpar
 
 
     OPEN(53, file = ordOut%outname, status = 'new')
-    WRITE(53,*) 'frame', '      ', 'mol', '     ', 'rads', '        ', 'degs', '        ', 'ordpar'
+    WRITE(53,*) 'frame', '      ', 'mol', '         ', 'ordpar'
 
 
         DO
             ALLOCATE(ordInArr%atomid(ordIn%atoms), &
             & ordInArr%coor(ordIn%atoms, ordIn%dimen), &
             & mass(ordIn%atoms), &
-            & ring(ordOut%molec, 2, ordIn%dimen), &
-            & vector(ordOut%molec, ordIn%dimen), &
-            & angle(ordOut%molec), &
+            & a(ordOut%molec, ordIn%dimen), &
+            & b(ordOut%molec, ordIn%dimen), &
+            & c(ordOut%molec, ordIn%dimen), &
+            ! & vector(ordOut%molec, ordIn%dimen), &
+            ! & angle(ordOut%molec), &
             & center(ordOut%molec, ordIn%dimen), &
             & ord(ordOut%molec))
 
@@ -445,7 +448,6 @@ PUBLIC :: garray, printarray, centermass, ordpar
                             xvec1 = ordInArr%coor(j, 1)
                             yvec1 = ordInArr%coor(j, 2)
                             zvec1 = ordInArr%coor(j, ordIn%dimen)
-
                             masstot = masstot + mass(j)
                             xtot = xtot + (ordInArr%coor(j,1) * mass(j))
                             ytot = ytot + (ordInArr%coor(j,2) * mass(j))
@@ -455,16 +457,14 @@ PUBLIC :: garray, printarray, centermass, ordpar
                             xvec2 = ordInArr%coor(j, 1)
                             yvec2 = ordInArr%coor(j, 2)
                             zvec2 = ordInArr%coor(j, ordIn%dimen)
-
                             masstot = masstot + mass(j)
                             xtot = xtot + (ordInArr%coor(j,1) * mass(j))
                             ytot = ytot + (ordInArr%coor(j,2) * mass(j))
                             ztot = ztot + (ordInArr%coor(j,ordIn%dimen) * mass(j))
-
                         ELSE
                             CYCLE
                         ENDIF
-        
+
                     ENDDO
                     
 
@@ -473,22 +473,23 @@ PUBLIC :: garray, printarray, centermass, ordpar
                     center(i, ordIn%dimen) = ztot / masstot
 
 
-                    a1 = ring(i,1,1) = xvec1 - center(i,1) ! <a1>
-                    b1 = ring(i,2,1) = xvec2 - center(i,1) ! <b1>
-                    a2 = ring(i,1,2) = yvec1 - center(i,2) ! <a2>
-                    b2 = ring(i,2,2) = yvec2 - center(i,2) ! <b2>
-                    a3 = ring(i,1, ordIn%dimen) = zvec1 - center(i, ordIn%dimen)
-                    ! <a3>
-                    b3 = ring(i,2, ordIn%dimen) = zvec2 - center(i, ordIn%dimen)
-                    ! <b3>
+                    a(i,1) = (xvec1 - center(i,1))
+                    b(i,1) = (xvec2 - center(i,1))
+                    a(i,2) = (yvec1 - center(i,2))
+                    b(i,2) = (yvec2 - center(i,2))
+                    a(i, ordIn%dimen) = (zvec1 - center(i, ordIn%dimen))
+                    b(i, ordIn%dimen) = (zvec2 - center(i, ordIn%dimen))
 
 
-                    c1 = (a2*b3) - (a3*b2)
-                    c2 = (a1*b3) - (a3*b1)
-                    c3 = (a1*b2) - (a2*b1)
 
-                    ord(i) = (1/2)( ((2*(c3**2)) - (c1**2) - (c2**2))/
-                        ((c1**2) + (c2**2) + (c3**2)))
+
+
+
+                    c(i,1) = ((a(i,2)*b(i, ordIn%dimen)) - (a(i, ordIn%dimen)*b(i,2)))**2
+                    c(i,2) = ((a(i,1)*b(i, ordIn%dimen)) - (a(i, ordIn%dimen)*b(i,1)))**2
+                    c(i, ordIn%dimen) = ((a(i,1)*b(i,2)) - (a(i,2)*b(i,1)))**2
+
+                    ord(i) = (((c(i,ordIn%dimen)/(c(i,1)+c(i,2)+c(i,ordIn%dimen)))*3)-1)/2
 
 
 
@@ -512,7 +513,8 @@ PUBLIC :: garray, printarray, centermass, ordpar
                     
                 
                     WRITE(53,*) frame, i, ord(i)
-                
+
+ 
                     Xvec1 = 0.0
                     Xvec2 = 0.0
                     Yvec1 = 0.0
@@ -522,7 +524,14 @@ PUBLIC :: garray, printarray, centermass, ordpar
 
                 ENDDO
 
-            DEALLOCATE(ordInArr%atomid, ordInArr%coor, ring, vector, angle, ord)
+            DEALLOCATE(ordInArr%atomid, &
+                & ordInArr%coor, &
+                & mass, &
+                & center, &
+                & a, &
+                & b, &
+                & c, &
+                & ord)
 
             READ(23,*) nxtfrm
             READ(23,*) ordIn%genbyvmd
