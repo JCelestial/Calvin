@@ -1,4 +1,4 @@
-    
+     
 !|-------------------------------------------------|
 !| /////////////////////////////////////////////// |
 !| ///// T R A J E C T O R Y     M O D U L E ///// |
@@ -225,7 +225,7 @@ PUBLIC :: garray, printarray, centermass, ordpar
     INTEGER :: i, j
     CHARACTER(2) :: atom1, atom2
     REAL , PARAMETER :: Cmass = 12.0107 , Hmass = 1.00784 , Nmass = 14.0067, Omass  = 15.999
-    CHARACTER, PARAMETER :: Cstring = 'C' , Hstring = 'H' , Nstring = 'N' , Ostring = 'O'
+    CHARACTER(1), PARAMETER :: Cstring = 'C' , Hstring = 'H' , Nstring = 'N' , Ostring = 'O'
 
     REAL, ALLOCATABLE :: mass(:), momenta(:,:), com(:,:)
     REAL :: masstot = 0, xtot = 0, ytot = 0, ztot = 0    
@@ -365,14 +365,20 @@ PUBLIC :: garray, printarray, centermass, ordpar
     INTEGER :: nxtfrm, frame = 1
     INTEGER :: i, j
 
-    REAL, ALLOCATABLE :: ring(:,:,:), vector(:,:)
-    REAL, ALLOCATABLE :: angle(:), ord(:)
+    REAL , PARAMETER :: Cmass = 12.0107 , Hmass = 1.00784 , Nmass = 14.0067, Omass  = 15.999
+    REAL, ALLOCATABLE :: ring(:,:,:)
+    REAL, ALLOCATABLE :: center(:,:), vector(:,:)
+    REAL, ALLOCATABLE :: mass(:), angle(:), ord(:)
     
     CHARACTER(2) :: string1, string2
 
+    REAL :: masstot = 0, xtot = 0, ytot = 0, ztot = 0
     REAL :: xvec1, xvec2
     REAL :: yvec1, yvec2
     REAL :: zvec1, zvec2
+
+    REAL :: a1,a2,a3,b1,b2,b3,c1,c2,c3
+
 
     
     ordIn%filename = inpt
@@ -408,9 +414,11 @@ PUBLIC :: garray, printarray, centermass, ordpar
         DO
             ALLOCATE(ordInArr%atomid(ordIn%atoms), &
             & ordInArr%coor(ordIn%atoms, ordIn%dimen), &
+            & mass(ordIn%atoms), &
             & ring(ordOut%molec, 2, ordIn%dimen), &
             & vector(ordOut%molec, ordIn%dimen), &
             & angle(ordOut%molec), &
+            & center(ordOut%molec, ordIn%dimen), &
             & ord(ordOut%molec))
 
 
@@ -418,45 +426,92 @@ PUBLIC :: garray, printarray, centermass, ordpar
 
                     DO j = 1, ordOut%size
                         READ(23,*) ordInArr%atomid(j), ordInArr%coor(j, 1:ordIn%dimen)
+
+
+                        IF (INDEX(ordInArr%atomid(j) , Cstring) == 1) THEN
+                            mass(j) = Cmass
+                        ELSEIF (INDEX(ordInArr%atomid(j) , Hstring) == 1) THEN
+                            mass(j) = Hmass
+                        ELSEIF (INDEX(ordInArr%atomid(j) , Nstring) == 1) THEN
+                            mass(j) = Nmass
+                        ELSE
+                            mass(j) = Omass
+                        ENDIF
+
+
+
             
-                        IF (ordInArr%atomid(j) == string1 ) THEN
+                        IF (string1 == ordInArr%atomid(j)) THEN
                             xvec1 = ordInArr%coor(j, 1)
                             yvec1 = ordInArr%coor(j, 2)
                             zvec1 = ordInArr%coor(j, ordIn%dimen)
-                        ELSEIF (ordInArr%atomid(j) == string2 ) THEN
+
+                            masstot = masstot + mass(j)
+                            xtot = xtot + (ordInArr%coor(j,1) * mass(j))
+                            ytot = ytot + (ordInArr%coor(j,2) * mass(j))
+                            ztot = ztot + (ordInArr%coor(j,ordIn%dimen) * mass(j))
+
+                        ELSEIF (string2 == ordInArr%atomid(j)) THEN
                             xvec2 = ordInArr%coor(j, 1)
                             yvec2 = ordInArr%coor(j, 2)
                             zvec2 = ordInArr%coor(j, ordIn%dimen)
+
+                            masstot = masstot + mass(j)
+                            xtot = xtot + (ordInArr%coor(j,1) * mass(j))
+                            ytot = ytot + (ordInArr%coor(j,2) * mass(j))
+                            ztot = ztot + (ordInArr%coor(j,ordIn%dimen) * mass(j))
+
                         ELSE
                             CYCLE
                         ENDIF
         
                     ENDDO
                     
-                    ring(i , 1 , 1) = xvec1
-                    ring(i , 2 , 1) = xvec2
-                    ring(i , 1 , 2) = yvec1
-                    ring(i , 2 , 2) = yvec2
-                    ring(i , 1 , ordIn%dimen) = zvec1
-                    ring(i , 2 , ordIn%dimen) = zvec2
 
-                    vector(i , 1) = ring(i , 2 , 1) - ring(i , 1 , 1)    
-                    vector(i , 2) = ring(i , 2 , 2) - ring(i , 1 , 2)    
-                    vector(i , 3) = ring(i , 2 , ordIn%dimen) - ring(i , 1 , ordIn%dimen)   
+                    center(i,1) = xtot / masstot
+                    center(i,2) = ytot / masstot
+                    center(i, ordIn%dimen) = ztot / masstot
+
+
+                    a1 = ring(i,1,1) = xvec1 - center(i,1) ! <a1>
+                    b1 = ring(i,2,1) = xvec2 - center(i,1) ! <b1>
+                    a2 = ring(i,1,2) = yvec1 - center(i,2) ! <a2>
+                    b2 = ring(i,2,2) = yvec2 - center(i,2) ! <b2>
+                    a3 = ring(i,1, ordIn%dimen) = zvec1 - center(i, ordIn%dimen)
+                    ! <a3>
+                    b3 = ring(i,2, ordIn%dimen) = zvec2 - center(i, ordIn%dimen)
+                    ! <b3>
+
+
+                    c1 = (a2*b3) - (a3*b2)
+                    c2 = (a1*b3) - (a3*b1)
+                    c3 = (a1*b2) - (a2*b1)
+
+                    ord(i) = (1/2)( ((2*(c3**2)) - (c1**2) - (c2**2))/
+                        ((c1**2) + (c2**2) + (c3**2)))
+
+
+
+
+
+
+                    ! vector(i , 1) = ring(i , 2 , 1) - ring(i , 1 , 1)    
+                    ! vector(i , 2) = ring(i , 2 , 2) - ring(i , 1 , 2)    
+                    ! vector(i , 3) = ring(i , 2 , ordIn%dimen) - ring(i , 1 , ordIn%dimen)   
                 
-
-                    angle(i) = ACOS( (vector(i, ordIn%dimen)) / &
-                    & (( ((vector(i, 1)) ** 2) + &
-                    & ((vector(i, 2)) ** 2) + &
-                    & ((vector(i, ordIn%dimen)) ** 2) ) ** 0.5))
-                    ! In order to convert radians to degrees, multiply by 57.296
+                    ! angle(i) = ACOS( (vector(i, ordIn%dimen)) / &
+                    ! & (( ((vector(i, 1)) ** 2) + &
+                    ! & ((vector(i, 2)) ** 2) + &
+                    ! & ((vector(i, ordIn%dimen)) ** 2) ) ** 0.5))
+                    ! ! In order to convert radians to degrees, multiply by 57.296
                                    
-                    ord(i) = (((((COS((angle(i)))) ** 2) * 3) - 1) / 2)
+                    ! ord(i) = (((((COS((angle(i)))) ** 2) * 3) - 1) / 2)
+
 
                     
                     
                 
-                    WRITE(53,*) frame, i, angle(i), (angle(i) * 57.296), ord(i)
+                    WRITE(53,*) frame, i, ord(i)
                 
                     Xvec1 = 0.0
                     Xvec2 = 0.0
