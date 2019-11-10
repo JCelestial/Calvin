@@ -390,8 +390,8 @@ PUBLIC :: garray, printarray, centermass, ordpar
     READ(5,*) ordOut%outname
 
     WRITE(6,*) '==============================================================================================='
-    WRITE(6,*) 'CALVIN: what would you like to find the cross product of? (separate your answers by a tab or space)'
-    WRITE(6,*) 'Example: Atoms C1<=== center ===>C2 can be entered as C1  C2'
+    WRITE(6,*) 'CALVIN: what two atoms would you like to vectorize? (separate your answers by a tab or space)'
+    WRITE(6,*) 'Example: Atoms C1===>C2 can be entered as C1  C2'
     READ(5,*) string1, string2
     WRITE(6,*) 'CALVIN is crunching the numbers....'
 
@@ -456,7 +456,7 @@ PUBLIC :: garray, printarray, centermass, ordpar
                     
                     
                 
-                    WRITE(53,*) frame, i, angle(i), (angle(i) * 57.296), ord(i)
+                    WRITE(53,*) frame, i, ord(i)
                 
                     Xvec1 = 0.0
                     Xvec2 = 0.0
