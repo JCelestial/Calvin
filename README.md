@@ -9,6 +9,16 @@ And more!
 ### What is CALVIN?
 Calvin stands for **C**omputes **A**bsurdly **L**arge, **V**apid, **I**ndexed **N**umbers and is a utility that is used to process large scale trajectory data from Molecular Dynamics simulation programs such as [VMD](https://www.ks.uiuc.edu/Research/vmd/). In programs like VMD, simulation trajectory coordinates can be exported under multiple formats, e.g. *.xyz*, *.pdb*, or *.dcd*; as of this current version, CALVIN is most compatible with *.xyz* and currently looking to build classes to expand upon CALVIN's usability for more extensions.
 
+#### Current methods available:
+* Print coordinates (no header files)
+* Center of mass
+* [Order parameter](https://en.wikipedia.org/wiki/Phase_transition)
+* Energy Average and standard deviation
+
+#### Planned methods:
+* [Radial distribution](https://en.wikipedia.org/wiki/Radial_distribution_function)
+* Protein surface area
+
 ### Why do we need CALVIN?
 Simulation coordinate files are very cumbersome to parse as it is littered with unecessary headers and columns, which is why this version begins with one of the least complex extensions, *.xyz*. A typical *.xyz* file can appear as such:
 ```
