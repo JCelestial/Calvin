@@ -11,7 +11,8 @@ Calvin stands for **C**omputes **A**bsurdly **L**arge, **V**apid, **I**ndexed **
 
 #### Current methods available:
 * Print coordinates (no header files)
-* Center of mass
+* Center of Mass
+* Angular Conformation
 * [Order parameter](https://en.wikipedia.org/wiki/Phase_transition)
 * Energy Average and standard deviation
 
