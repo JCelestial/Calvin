@@ -35,6 +35,16 @@ Once appended, CALVIN can properly parse these files and due to the nature of ho
 * Total number of molecules within simulation frames
 * Number of atoms per molecule
 
+```
+========================================================
+CALVIN : The data has the following array dimensions... 
+
+Simulation Frames: 500
+Molecules per Frame: 672 
+Atoms per Molecule: 56
+========================================================'
+```
+
 ### Why Fortran?
 
 One reason, for speed. Typically, multiple simulated systems have to be analyzed, and due to their large size, it's difficult to analyze all of them concurrently without using [High-Performance Clusters](https://insidehpc.com/hpc101/intro-to-hpc-whats-a-cluster/), so the next best thing is to quickly analyze them one by one. To put it in perspective, it takes minutes for Interpreted languages like Python or R to analyze files that are roughly half a GB in size, whereas CALVIN takes about 30 seconds to give the user simulation metrics and analyses.
