@@ -39,7 +39,7 @@ Not to mention the first two lines shows up intermittently to mark the beginning
 
 CALVIN takes advantage of these headers by first appending the *.xyz* files with the *terminate_xyz* script that will attach a termination sequence at the very end of the file and then using those lines as checkpoints for allocation and deallocation of memory space, preventing memory leaks.
 ```bash
-$ ./terminate_xyz simulation.xyz > terminated_simulation.txt
+$ ./terminate_xyz trajectories.xyz > terminatedTrajectories.txt
 ```
 Once appended, CALVIN can properly parse these files and due to the nature of how MD programs arrange their data, this allows CALVIN to analyze the simulation metrics of the simulation, containing the following:
 * Total number of simulation frames
