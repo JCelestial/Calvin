@@ -72,4 +72,4 @@ With that said, there are future plans on overhauling CALVIN into a different la
 * Expand methods on Energy module to include other statistical metrics
 * Overhaul CALVIN into C++ and use Linked Lists instead of Arrays to remove the need for the termination shell script
 * Greater support for multithreading to allow concurrent execution of multiple analyses
-* Development of a desktop or web application interface to make CALVIN more user friendly
+* Development of a GUI to make CALVIN more user friendly
