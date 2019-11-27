@@ -46,6 +46,8 @@ Once appended, CALVIN can properly parse these files and due to the nature of ho
 * Total number of molecules within simulation frames
 * Number of atoms per molecule
 
+For example, CALVIN will give the following output for a simulation that contains 500 frames, 672 total molecules per frame, and each molecule contains 56 atoms:
+
 ```
 ========================================================
 CALVIN : The data has the following array dimensions... 
@@ -56,16 +58,16 @@ Atoms per Molecule: 56
 ========================================================
 ```
 
-### Why Fortran?
+### In defense of older languages...
 
-One reason, for speed. Typically, multiple simulated systems have to be analyzed, and due to their large size, it's difficult to analyze all of them concurrently without using [High-Performance Clusters](https://insidehpc.com/hpc101/intro-to-hpc-whats-a-cluster/), so the next best thing is to quickly analyze them one by one. To put it in perspective, it takes minutes for Interpreted languages like Python or R to analyze files that are roughly half a GB in size, whereas CALVIN takes about 30 seconds to give the user simulation metrics and analyses.
+Typically, multiple simulated systems have to be analyzed, and due to their large size, it's difficult to analyze all of them concurrently without using [High-Performance Clusters](https://insidehpc.com/hpc101/intro-to-hpc-whats-a-cluster/), so the next best thing is to quickly analyze them one by one. To put it in perspective, it takes minutes for Interpreted languages like Python or R to analyze files that are roughly half a GB in size, whereas CALVIN takes about 30 seconds to give the user simulation metrics and analyses.
 
 With that said, there are future plans on overhauling CALVIN into a different language, such as C++ to support more Object Orientation and the utilization of more Data Structures in order to perform more complex methods. Another proposed alternative is to strip CALVIN of its main interface and leave its methods alone and turn the Fortran components into a dynamic library that can be invoked in memory.
 
 ### Bugs and Future Plans
 
 #### Bugs
-* Fix the garray subroutine to reset the simulation frame metric
+* Fix the garray subroutine to reset the simulation frame metric (just a minor cosmetic issue, it doesn't mess up the subsequent data)
 
 #### Future Plans
 * Incorporate methods to analyze protein files such surface area
