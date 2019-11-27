@@ -2,7 +2,7 @@
 ### *For when you are tired of writing new scripts for every Molecular Simulation....*
 CALVIN will allow you to go from simulation to plot-ready data in minutes!
 
-<img src="https://github.com/JCelestial/Calvin/blob/master/tio2_il_system.png" width="275" height="300">  <img src="https://github.com/JCelestial/Calvin/blob/master/old_algo_ordpar.gif" width="350" height="300">
+<img src="https://github.com/JCelestial/Calvin/blob/master/display/tio2_il_system.png" width="275" height="300">  <img src="https://github.com/JCelestial/Calvin/blob/master/display/old_algo_ordpar.gif" width="350" height="300">
 
 And more!
 
