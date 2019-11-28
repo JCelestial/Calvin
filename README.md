@@ -1,4 +1,4 @@
-# CALVIN v.0.4.8
+# CALVIN v0.4.8
 ### *For when you are tired of writing new scripts for every Molecular Simulation....*
 CALVIN will allow you to go from simulation to plot-ready data in minutes!
 
