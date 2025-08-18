@@ -8,7 +8,7 @@ And more!
 
 ------------------------------------------------------------------------------------------------------------------------------------
 ### What is molFrmae?
-MolFrame is a utility that is used to process large scale trajectory data from Molecular Dynamics simulation programs such as [VMD](https://www.ks.uiuc.edu/Research/vmd/). In programs like VMD, simulation trajectory coordinates can be exported under multiple formats, e.g. *.xyz*, *.pdb*, or *.dcd*; as of this current version, molFrame is most compatible with *.xyz* and currently looking to build classes to expand upon CALVIN's usability for more extensions.
+MolFrame is a utility that is used to process large scale trajectory data from Molecular Dynamics simulation programs such as [VMD](https://www.ks.uiuc.edu/Research/vmd/). In programs like VMD, simulation trajectory coordinates can be exported under multiple formats, e.g. *.xyz*, *.pdb*, or *.dcd*; as of this current version, molFrame is most compatible with *.xyz* and currently looking to build classes to expand upon molFrame's usability for more extensions.
 
 ------------------------------------------------------------------------------------------------------------------------------------
 #### Current methods available:
@@ -64,7 +64,7 @@ Atoms per Molecule: 56
 
 One reason, for speed. Typically, multiple simulated systems have to be analyzed, and due to their large size, it's difficult to analyze all of them concurrently without using [High-Performance Clusters](https://insidehpc.com/hpc101/intro-to-hpc-whats-a-cluster/), so the next best thing is to quickly analyze them one by one. To put it in perspective, it takes minutes for Interpreted languages like Python or R to analyze files that are roughly half a GB in size, whereas molFrame takes about 30 seconds to give the user simulation metrics and analyses.
 
-With that said, there are future plans on overhauling CALVIN into a different language, such as C++ to support more Object Orientation and the utilization of more Data Structures in order to perform more complex methods. Another proposed alternative is to strip molFrame of its main interface and leave its methods alone and turn the Fortran components into a dynamic library that can be invoked in memory.
+With that said, there are future plans on overhauling molFrame into a different language, such as C++ to support more Object Orientation and the utilization of more Data Structures in order to perform more complex methods. Another proposed alternative is to strip molFrame of its main interface and leave its methods alone and turn the Fortran components into a dynamic library that can be invoked in memory.
 
 ------------------------------------------------------------------------------------------------------------------------------------
 ### Bugs and Future Plans
