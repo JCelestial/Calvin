@@ -7,7 +7,7 @@ molFrame is a workflow tool that will allow one to go from simulation to plot-re
 And more!
 
 ------------------------------------------------------------------------------------------------------------------------------------
-### What is molFrmae?
+### What is molFrame?
 MolFrame is a utility that is used to process large scale trajectory data from Molecular Dynamics simulation programs such as [VMD](https://www.ks.uiuc.edu/Research/vmd/). In programs like VMD, simulation trajectory coordinates can be exported under multiple formats, e.g. *.xyz*, *.pdb*, or *.dcd*; as of this current version, molFrame is most compatible with *.xyz* and currently looking to build classes to expand upon molFrame's usability for more extensions.
 
 ------------------------------------------------------------------------------------------------------------------------------------
